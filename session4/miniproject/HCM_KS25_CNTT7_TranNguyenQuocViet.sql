@@ -6,15 +6,16 @@ use baitapthuchanh;
 create table categories(
 	categorry_id int primary key auto_increment,
     category_name char(50) not null
-);
+)engine=InnoDB default charset=utf8mb4;
 
 create table products(
 	product_id int primary key auto_increment,
     product_name char(50) not null,
     price decimal(18,4) not null,
     stock varchar(100) null,
-    category_id int not null 
-);
+    category_id int not null,
+    foreign key (category_id) references categories(category_id)
+)engine=InnoDB default charset=utf8mb4;
 
 insert into categories(category_name)
 values ('Điện tử'), ('Thời trang');
@@ -28,9 +29,11 @@ values
 
 update products
 set price = '26000000'
-where product_name = 'iphone 15'
-and category_id = 1
-or stock = stock + 10;
+where product_name = 'iphone 15';
+
+update products
+set stock = stock + 10
+where catagory_id = 1;
 
 delete from products 
 where product_id = 4

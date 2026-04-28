@@ -68,9 +68,9 @@ insert into Order_Detail values
 ('DH003', 'P005', 1, 30000000),
 ('DH004', 'P004', 1, 15000000);
 
-
+set sql_safe_updates = 0;
 update Products set price = price * 1.1 where NhaSanXuat = 'Apple';
-
+set sql_safe_updates = 1;
 delete from Customer where phone is null;
 
 

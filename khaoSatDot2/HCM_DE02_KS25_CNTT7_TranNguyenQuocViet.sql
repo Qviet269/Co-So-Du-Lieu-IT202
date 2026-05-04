@@ -32,7 +32,7 @@ create table enrollment_detail (
 	enrollment_id varchar(20),
     course_id varchar(20),
     status varchar(50) default 'Đang học',
-    final_score float not null,
+    final_score float ,
     
     foreign key (course_id) references courses(course_id),
     foreign key (enrollment_id) references enrollments(enrollment_id)
@@ -61,7 +61,7 @@ insert into students (student_id, fullName, email, phone, birth_of_day) values
 ('HV004', 'Phạm Minh Đức', 'duc.pham@gmail.com', '0934567890', '2002-03-25'),
 ('HV005', 'Võ Mỹ Hạnh', 'hanh.vo@gmail.com', '0945678901', '2000-08-30');
 
-insert into enrollments (enrollment_id, date_of_receipt, payment_method, student_id, note) values
+insert into enrollments (enrollment_id, date_of_receipt, payment_methos, student_id, note) values
 ('P001', '2026-05-01 08:30:00', 'Tiền mặt', 'HV001', 'Học viên mới'),
 ('P002', '2026-05-01 10:15:00', 'Chuyển khoản', 'HV002', 'Đăng ký nhóm'),
 ('P003', '2026-05-02 14:00:00', 'Tiền mặt', 'HV003', NULL),
@@ -70,11 +70,11 @@ insert into enrollments (enrollment_id, date_of_receipt, payment_method, student
 
 insert into enrollment_detail (enrollment_id, course_id, status, final_score) values
 ('P001', 'PDK001', 'Đang học', 0),
-('P001', 'PDK002', 'Đang học', 0),
-('P002', 'PDK003', 'Đang học', 0),
-('P003', 'PDK004', 'Bảo lưu', NULL),
-('P004', 'PDK005', 'Đang học', 0),
-('P005', 'PDK006', 'Đang học', 0);
+('P001', 'PDK001', 'Đang học', 0),
+('P002', 'PDK002', 'Đang học', 0),
+('P003', 'PDK003', 'Bảo lưu', NULL),
+('P004', 'PDK004', 'Đang học', 0),
+('P005', 'PDK005', 'Đang học', 0);
 
 update courses 
 set tuition = tuition * 0.1
@@ -95,13 +95,13 @@ where student_id in (
 
 select course_name from courses
 where course_id in (
-		select cousre_id from enrollment_detail
+		select course_id from enrollment_detail
         where course_id = 'PDK001'
 );
 
-
+-- nnnnnn
 select fullName, phone, email from students
-where students in (
+where student_id in (
 		select student_id from  enrollments
         where enrollment_id in(
 			select enrollment_id from enrollment_detail

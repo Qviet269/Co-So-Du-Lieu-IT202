@@ -42,7 +42,7 @@ alter table enrollments
 add note text;
 
 alter table courses
-rename column lecturer to Giao_Vien;
+rename column lecturer to Giao_Vien vachar(50);
 
 drop table enrollment_detail;
 drop table enrollments;
@@ -115,5 +115,3 @@ where student_id in (
 select ed.enrollment_id, c.course_name, c.Giao_Vien, ed.final_score
 from enrollment_detail ed, courses c
 where ed.course_id = c.course_id and ed.status = 'Đang học';
-
-

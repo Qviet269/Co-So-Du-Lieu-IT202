@@ -126,6 +126,8 @@ CREATE PROCEDURE GetTopScoreStudent (IN varCourseID VARCHAR(6))
         FROM Enrollment E
         JOIN Student S 
         ON S.StudentID = E.StudentID
+		JOIN Course C
+        ON C.CourseID = E.CourseID
         WHERE varCourseID = E.CourseID
         AND E.Score = (SELECT MAX(Score) 
 						FROM Enrollment

@@ -48,18 +48,18 @@ DELIMITER //
     END //
 DELIMITER ;
 
-INSERT INTO students (student_id, full_name) VALUES (1, 'Nguyễn Văn A');
-INSERT INTO grades (student_id, score) VALUES (SV01, -5);
+INSERT INTO students (student_id, full_name) VALUES ('SV01', 'Nguyễn Văn A');
+INSERT INTO grades (student_id, score) VALUES ('SV01', -5);
 SELECT score FROM grades;
 
 -- CAU 2
 START TRANSACTION;
 INSERT INTO students (student_id , full_name)
 VALUES 
-('SV02', 'Ha Bich Ngoc' );
+('SV03', 'Ha Bich Ngoc' );
 UPDATE students
 SET total_debt = 5000000
-WHERE student_id = 'SV02';
+WHERE student_id = 'SV03';
 COMMIT;
 
 -- CAU 3
@@ -75,45 +75,43 @@ DELIMITER //
     END //
 DELIMITER ;
 
+update grades
+set score = 8
+where student_id = 'SV01';
+select * from grade_log;
+
 -- CAU 4
-
+DROP PROCEDURE IF EXISTS sp_pay_tuition;
 DELIMITER //
-CREATE PROCEDURE sp_pay_tuition()
-BEGIN
-    DECLARE current_debt INT;
-
-    START TRANSACTION;
-
-    UPDATE students
-    SET total_debt = total_debt - 2000000
-    WHERE student_id = 'SV01';
-
-
-    SELECT total_debt INTO current_debt
-    FROM students
-    WHERE student_id = 'SV01';
-
-
-    IF current_debt < 0 THEN
-        ROLLBACK;
-    ELSE
-        COMMIT;
-    END IF;
-
-END //
+	CREATE PROCEDURE sp_pay_tuition ()
+    BEGIN
+		DECLARE current_debt INT;
+		START TRANSACTION ;
+        UPDATE students 
+        SET total_debt = total_debt - 2000000
+        WHERE student_id = 'SV01';
+        
+        SELECT total_debt INTO current_debt FROM students WHERE student_id = 'SV01';
+        IF current_debt < 0 THEN
+			ROLLBACK ;
+		ELSE
+			COMMIT;
+		END IF;
+    END //
 DELIMITER ;
 
+-- CAU 5
+DROP TRIGGER IF EXISTS tg_prevent_pass_update;
 DELIMITER //
-
-CREATE TRIGGER tg_prevent_pass_update
-BEFORE UPDATE
-ON grades
-FOR EACH ROW
-BEGIN
-    IF OLD.score >= 4.0 THEN
+	CREATE TRIGGER  tg_prevent_pass_update
+    BEFORE UPDATE ON grades
+    FOR EACH ROW
+    BEGIN
+		IF OLD.score >= 4.0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Sinh vien da qua mon, khong duoc phep sua diem';
-    END IF;
-END //
-
+    END IF; 
+    END //
 DELIMITER ;
+
+UPDATE grades SET score = 9.0 WHERE  student_id = 'SV01';

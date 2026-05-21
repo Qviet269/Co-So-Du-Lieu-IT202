@@ -110,7 +110,7 @@ WHERE D.department_name = 'IT' AND P.budget > 30000000;
 
 -- CAU 2
 SELECT employee_id, full_name, email FROM employees
-WHERE hire_date BETWEEN 2022-01-01 AND 2022-12-31 AND email LIKE '%@gmail.com';
+WHERE hire_date BETWEEN '2022-01-01' AND '2022-12-31' AND email LIKE '%@gmail.com';
 
 -- cau 3
 SELECT employee_id, full_name, salary FROM employees
@@ -185,6 +185,7 @@ DELIMITER //
 	CREATE PROCEDURE sp_check_project_budget(IN p_project_id INT, 
 											OUT p_message VARCHAR(100))
     BEGIN
+		
 		IF budget < 20000000 THEN 
 			SET p_message = 'Ngân sách thấp';
         ELSE IF budget >= 20000000 AND budget <= 40000000 THEN

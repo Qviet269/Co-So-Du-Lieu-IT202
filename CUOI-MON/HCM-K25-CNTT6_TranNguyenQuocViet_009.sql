@@ -145,6 +145,7 @@ WHERE e.working_status = 'Active';
 CREATE INDEX idx_assignment_dates
 ON  work_assignments (start_date, completed_date);
 
+DROP VIEW vw_overdue_assignments;
 CREATE VIEW vw_overdue_assignments AS
 SELECT W.assignment_id, E.full_name, P.project_name, W.start_date, W.deadline 
 FROM work_assignments AS W
@@ -155,3 +156,41 @@ ON P.project_id = W.project_id
 WHERE completed_date  IS NULL AND W.deadline > CURDATE();
 
 SELECT * FROM vw_overdue_assignments;
+
+-- Phan 6
+DELIMITER //
+	CREATE TRIGGER trg_after_assignment_insert
+    AFTER INSERT ON work_assignments
+    FOR EACH ROW
+    BEGIN
+		UPDATE projects
+        SET project_status = 'Doing'
+        WHERE project_id = NEW.project_id;
+    END //
+DELIMITER ;
+
+-- CAU 2
+DELIMITER //
+	CREATE TRIGGER trg_prevent_delete_employee
+    AFTER DELETE ON work_assignments
+    FOR EACH ROW
+    BEGIN
+		
+    END //
+DELIMITER ;
+
+-- PHAN 7
+-- CAU 1
+DELIMITER //
+	CREATE PROCEDURE sp_check_project_budget(IN p_project_id INT, 
+											OUT p_message VARCHAR(100))
+    BEGIN
+		IF budget < 20000000 THEN 
+			SET p_message = 'Ngân sách thấp';
+        ELSE IF budget >= 20000000 AND budget <= 40000000 THEN
+			SET p_message = 'Ngân sách trung bình';
+        else
+			set p_message = 'Ngân sách cao';
+        END IF;
+    END //
+DELIMITER ;

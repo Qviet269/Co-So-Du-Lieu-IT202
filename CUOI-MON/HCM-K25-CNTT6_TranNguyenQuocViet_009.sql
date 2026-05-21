@@ -175,7 +175,10 @@ DELIMITER //
     AFTER DELETE ON work_assignments
     FOR EACH ROW
     BEGIN
-		
+		IF completed_date IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'LỖI: Nhân viên chưa hoàn thành công việc nên không thể xóa';
+        END IF;
     END //
 DELIMITER ;
 

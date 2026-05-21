@@ -185,13 +185,27 @@ DELIMITER //
 	CREATE PROCEDURE sp_check_project_budget(IN p_project_id INT, 
 											OUT p_message VARCHAR(100))
     BEGIN
-		
-		IF budget < 20000000 THEN 
+		DECLARE v_budget_pro INT;
+        SELECT budget INTO v_budget_pro FROM projects WHERE project_id = p_project_id;
+        
+		IF v_budget_pro < 20000000 THEN 
 			SET p_message = 'Ngân sách thấp';
-        ELSE IF budget >= 20000000 AND budget <= 40000000 THEN
+        ELSEIF v_budget_pro >= 20000000 AND v_budget_pro <= 40000000 THEN
 			SET p_message = 'Ngân sách trung bình';
-        else
-			set p_message = 'Ngân sách cao';
+        ELSE
+			SET p_message = 'Ngân sách cao';
         END IF;
+    END //
+DELIMITER ;
+
+-- CAU 2
+DELIMITER //
+	CREATE PROCEDURE sp_complete_assignment_transaction(IN p_assignment_id INT)
+    BEGIN
+		START TRANSACTION;
+        IF completed_date IS NOT NULL THEN
+			ROLLBACK;
+      
+		END IF;
     END //
 DELIMITER ;
